@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd        http://dubbo.apache.org/schema/dubbo        http://dubbo.apache.org/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="consumer-of-helloworld-app">
+        <dubbo:parameter key="qos.enable" value="true"></dubbo:parameter>
+        <dubbo:parameter key="qos.accept.foreign.ip" value="false"></dubbo:parameter>
+        <dubbo:parameter key="qos.port" value="22223"></dubbo:parameter> <!--22222 默认端口-->
+    </dubbo:application>
+
+    <!-- 使用multicast广播注册中心暴露发现服务地址 -->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+
+    <dubbo:protocol port="20881"/>
+    <!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
+    <dubbo:reference id="goodsService" interface="com.arm.dubbo.base.GoodsService"/>
+
+
+    <aop:aspectj-autoproxy/>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/test?useOldAliasMetadataBehavior=true&amp;useSSL=false"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <property name="initialSize" value="2"/>
+        <property name="minIdle" value="2"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="1000"/>
+    </bean>
+
+    <bean name="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <bean id="rollBackMiddleService" class="com.arm.dubbo.base.RollBackMiddleServiceImpl">
+        <property name="goodsService" ref="goodsService"></property>
+    </bean>
+
+    <bean id="rollBackService" class="com.arm.dubbo.base.RollBackServiceImpl">
+        <property name="rollBackMiddleService" ref="rollBackMiddleService"></property>
+        <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+    </bean>
+
+</beans>
