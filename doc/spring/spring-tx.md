@@ -1,4 +1,10 @@
 ## 事务传播机制
+### ：事务特性（ACID）
++ 1.Atomic(原子性)  原子性，数据操作的最小单元是事务，而不是sql语句
++ 2.Consistency(一致性) 事务完成前后，数据要保持逻辑的一致性
++ 2.Isolation(一致性) 一个事务执行的过程中,不应该受到其他事务的干扰
++ 2.Durability(持久性) 事务一旦结束,数据就持久到数据库
+
 ### Ⅰ：传播机制（Propagation）
   + required : 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。
   + supports : 支持当前事务，如果当前没有事务，就以非事务方式执行
@@ -84,7 +90,7 @@ testService.test5( new Object[][]{{"lisi", 1}, {"lisi1", 2}} );
 + 1.这种情况情况比较多，需要具体问题具体分析。
 
 #### 场景4***:语义重现
-+1.requires_new
++ 1.requires_new
 ```
 testService.test5();
 
@@ -109,6 +115,54 @@ public void test3() {
 
 结果：sql1失败 sql2成功 sql3失败
 ```
+
++ 2.nested
+```
+testService.test5();
+public void test5() {
+    try{
+        jdbcTemplate.update(slq, new Object[]{"lisi1", "1"});  // sql1
+        testService2.test2(); // 调用rTest
+        testService2.test3(); // 调用nTest
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+}
+@Transactional(propagation = Propagation.NESTED)
+public void test2() {
+    jdbcTemplate.update(slq, new Object[]{"lisi2", "2"});  // sql2
+}
+
+@Transactional(propagation = Propagation.NESTED)
+public void test3() {
+    jdbcTemplate.update(slq, new Object[]{"lisi3", "3"});  // sql3
+    int a = 1 / 0;
+}
+
+该示例演示了nested嵌套事务的语义，当test3报错跑到上层并拦截异常处理后，事务异常只会回滚sql3。
+```
+
+#### 场景5***:项目示例（dubbo+spring）
++ 1.情况描述：线上一个远程dubbo调用造成了我自己的事务被回滚了。但是我的远程调用已经包裹的异常处理。伪代码如下：
+```
+AService.A(){
+    doSubmit(); // 执行保存数据逻辑
+    ...
+    BService.do(); //  执行调用BService的方法
+    ...
+}
+
+BService.do(){
+try{dubboService.do();}catch(Throwable e){...}  // 远程dubbo调用报错，包裹异常处理
+}
+```
+> 如上所示，远程dubbo调用报错在已经异常处理的情况下为什么还是造成了doSubmit()方法提交的数据被回滚了呢？
+ 
+>原因是：是因为<aop:pointcut id="txPointcut1" expression="execution(* com.wisesoft..service..*.*(..))" />
+>我们在切面的时候切到了远程dubbo服务的service接口，spring通过dubbo生成的referenceBean(调用bean)和接口类生成了事务切面。
+>导致其实我们在调用dubboService.do()的时候，其实是将这个添加到已有的事务里面了，dubboService.do()报错直接照成dubboService.do()事务被标记
+>为回滚。所以我们的外部tryCatch直接没用。
+
 
 #### 思考
 + 1.为什么场景1中的service执行互不影响？
@@ -138,10 +192,12 @@ public void test3() {
     比如(required,requires_new,requires_new),当事务3抛出异常后，事务2在新创建的独立事务下执行，无法捕获到事务3的异常，所以也不会回滚；  
     比如(required,required,requires_new),当事务3抛出异常后，事务2在和事务1同一个事务中执行时，事务1捕获到异常，所以事务1，2都会回滚。
 + 5.如果外部存在事务，外部事务无法影响内部事务  
-    比如(required,requires_new,requires_new),当事务3抛出异常后，事务2，3在新创建的独立事务下执行，无法捕获到事务1的异常，所以2，3不会回滚；
-+ 6.特别的嵌套事务，当有嵌套事务时，其和他有关联的事务都会被该事务影响。  
+    比如(required,requires_new,requires_new),当事务1抛出异常后，事务2，3在新创建的独立事务下执行，无法捕获到事务1的异常，所以2，3不会回滚；
++ 6.特别的嵌套事务，当有嵌套事务时，其和他有关联的事务都会被该事务影响（基于savePoint）[savepoint](#savepoint)。
+    当事务异常被捕获后，将基于保存点回滚事务（参考场景4-2）  
     比如(required,NESTED,NESTED),当事务3抛出异常后，事务1，2都被嵌套，3着事务都会被回滚。
     比如(required,requires_new,NESTED),当事务3抛出异常后，事务1，3被回滚，2正常提交。
++ 7.@Transactional注解可以标记于接口方法上。
     
 ## 事务的隔离级别（https://www.jianshu.com/p/271076b79ca8）
 + 1.READ_UNCOMMITTED 读取未提交数据(会出现脏读,不可重复读)： 一个事务可以读取另一个未提交事务的数据  读到了还未提交的数据就是脏读
@@ -195,5 +251,49 @@ https://blog.csdn.net/acingdreamer/article/details/91873745
     + 7.cleanupTransactionInfo(txInfo); 清理事务执行信息。
     + 8.commitTransactionAfterReturning(txInfo); 正常执行就提交事务。
 + 3.事务传播逻辑流程图(createTransactionIfNecessary)
-![avatar](../img/tx-5.png)        
-            
+![avatar](../img/tx-5.png)      
+
+#### Ⅳ.PlatformTransactionManager
+
+
+## 事务优化   
++ 1.只读事务可以标记为read-only.可以帮助数据库引擎优化事务
++ 2.事务切面的时候注意不要切到了不需要事务的服务。（比如操作文件，远程调用等） 
+    因为事务开启会占用数据连接，如果操作耗时，则会一直占用连接而不得释放，而造成连接词的连接数减少影响性能。(https://zhuanlan.zhihu.com/p/92010384) 
+```
+// jabc最大连接设置成： <property name="maxActive" value="1"/>
+private static void test4() throws InterruptedException {
+    TestService testService = context.getBean(TestService.class);
+    new Thread(() -> testService.test6()).start(); //http请求，线程沉睡，模拟耗时不需要事务的请求
+    Thread.sleep(1000);
+    new Thread(() -> testService.test7()).start(); // 事务操作
+}
+
+@Transactional(propagation = Propagation.REQUIRED)
+void test6();
+@Transactional(propagation = Propagation.REQUIRED)
+void test7();
+```
++ 3.尽量减小切面的大小，比如a方法中调用了5个方法，其中4个方法不需要提交事务，其中一个需要，那就可以在需要事务的方法上加事务，不要再a方法上加事务。 比如发消息通知等。  
+
+
+## 其他
+#### <a id="savepoint">savepoint</a>
++ 1.通过以下sql可以测试出savepoint点有哪些特性
+```
+begin;
+insert into tx_user (username, age) values ('ll',1);
+savepoint a1;
+insert into tx_user (username, age) values ('ll',2);
+savepoint a2;
+insert into tx_user (username, age) values ('ll',3);
+savepoint a3;
+insert into tx_user (username, age) values ('ll',4);
+ROLLBACK to a1;
+select * from tx_user
+```    
++ 2.特性:
+   + 1 ROLLBACK to ？; 回退到某个保存点，如果你回退到了a1，那么就不能再回退到a3了，会报错。
+   + 2.ROLLBACK 整个事务全部回滚。
+   + 3.commit之后无法再回退。
+    

@@ -1,10 +1,16 @@
 package com.arm.spring.tx;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * @author zhaolangjing
@@ -13,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 如下，test1添加REQUIRED事务，test2不添加事务，则test2报错，事务被回滚。
  */
 @Service
+@Slf4j
 public class TestServiceImpl implements TestService {
 
     static String slq = "insert into tx_user(username , age) VALUES (?, ?);";
@@ -55,13 +62,55 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED
-    )
+    @Transactional(propagation = Propagation.REQUIRED)
     public void test5() {
-        jdbcTemplate.update(slq, new Object[]{"lisi1" , "1"});  // sql1
-        testService2.test2(); // 调用rTest
-        testService2.test3(); // 调用nTest
-        int a = 1 / 0;
+        try{
+            jdbcTemplate.update(slq, new Object[]{"lisi1", "1"});  // sql1
+            testService2.test2(); // 调用rTest
+            testService2.test3(); // 调用nTest
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+
+    public void test6() {
+        log.info("http 执行开始....");
+        URL url = null;
+        try {
+            url = new URL("http://www.baidu.com");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+            if (connection.getResponseCode() == 200) {
+                InputStream inputStream = connection.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                String temp = null;
+                StringBuffer sbf = new StringBuffer();
+                while ((temp = br.readLine()) != null) {
+                    sbf.append(temp);
+                    sbf.append("\r\n");
+                }
+                String result = sbf.toString();
+                System.out.println(result);
+                Thread.sleep(20000);
+                log.info("http 执行完成....");
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+
+    public void test7() {
+        log.info("保存数据执行开始 ....");
+        jdbcTemplate.update(slq, new Object[]{"lisi1", "1"});  // sql1
+        log.info("保存数据执行结束 ....");
     }
 
 
