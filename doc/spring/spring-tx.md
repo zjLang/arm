@@ -1,11 +1,11 @@
 ## 事务传播机制
-### ：事务特性（ACID）
+### Ⅰ：事务特性（ACID）
 + 1.Atomic(原子性)  原子性，数据操作的最小单元是事务，而不是sql语句
 + 2.Consistency(一致性) 事务完成前后，数据要保持逻辑的一致性
 + 2.Isolation(一致性) 一个事务执行的过程中,不应该受到其他事务的干扰
 + 2.Durability(持久性) 事务一旦结束,数据就持久到数据库
 
-### Ⅰ：传播机制（Propagation）
+### Ⅱ：传播机制（Propagation）
   + required : 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。
   + supports : 支持当前事务，如果当前没有事务，就以非事务方式执行
   + mandatory : 使用当前的事务，如果当前没有事务，就抛出异常
@@ -15,7 +15,7 @@
   + nested : 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则执行与PROPAGATION_REQUIRED类似的操作。
 
 
-### Ⅱ：spring-tx事务测试
+### Ⅲ：spring-tx事务测试
 #### 场景1：方法外调用测试(cglib代理)
 ```
     testService.test1( new Object[][]{{"lisi", 1}, {"lisi1", 2}} );
@@ -231,8 +231,6 @@ try{dubboService.do();}catch(Throwable e){...}  // 远程dubbo调用报错，包
        + 1.BeanFactoryTransactionAttributeSourceAdvisor.matches() 执行获取getTransactionAttributeSource().
        + 2.TransactionAttributeSource.getTransactionAttribute()方法，该方法将获取到增强方法的事务配置（TransactionAttribute）进行缓存，以待后续事务执行时使用
    + 2.createProxy() 根据配置创建代理类
-https://blog.csdn.net/acingdreamer/article/details/91873745
-
 
 #### Ⅲ.事务执行流程
 + 1.TransactionInterceptor首先我们看一下这个类的继承结构;其MethodInterceptor.invoke()方法就是执行入口。
@@ -254,6 +252,11 @@ https://blog.csdn.net/acingdreamer/article/details/91873745
 ![avatar](../img/tx-5.png)      
 
 #### Ⅳ.PlatformTransactionManager
++ 1.事务管理器做三件事情：getTransaction commit  rollback 。 一般的默认实现是：DataSourceTransactionManager
++ 2.TransactionStatus getTransaction(TransactionDefinition) 根据当前事务的事务定义获取当前事务的状态.
++ 3.void commit(TransactionStatus status) 提交事务，中间进行了判断，如果不满足提交的条件将会回滚事务。
++ 4.void rollback(TransactionStatus status) 回滚事务。
+![avatar](../img/tx-6.png)     
 
 
 ## 事务优化   
@@ -296,4 +299,21 @@ select * from tx_user
    + 1 ROLLBACK to ？; 回退到某个保存点，如果你回退到了a1，那么就不能再回退到a3了，会报错。
    + 2.ROLLBACK 整个事务全部回滚。
    + 3.commit之后无法再回退。
-    
+   
+####  编程时事务
+```
+// 注入transactionTemplate 事务模板器
+<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+    <property name="transactionManager" ref="transactionManager"/>
+</bean> 
+
+@Autowired
+private TransactionTemplate transactionTemplate;
+
+public void test() {
+    // 使用事务模板类惊醒操作
+    transactionTemplate.execute(t -> {
+        return jdbcTemplate.update(sql, new Object[]{"lisi2", "2"});
+    });
+}
+```
