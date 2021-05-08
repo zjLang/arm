@@ -36,6 +36,7 @@
         <module>arm-spring</module>
         <module>arm-encry</module>
         <module>arm-base</module>
+        <module>arm-dds</module>
     </modules>
 
     <!-- 依赖管理 -->
