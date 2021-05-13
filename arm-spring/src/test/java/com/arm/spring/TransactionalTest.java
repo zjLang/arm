@@ -1,5 +1,6 @@
 package com.arm.spring;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.arm.spring.tx.TestService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -17,12 +18,15 @@ public class TransactionalTest {
     public static void main(String[] args) throws InterruptedException {
         //test1();
         test3();
+        DruidDataSource dataSource = (DruidDataSource) context.getBean("dataSource");
+        log.info(String.valueOf(dataSource.getActiveCount()));
         //test4();
     }
 
     /**
      * 测试事务连接占用的场景
      * jabc最大连接设置成： <property name="maxActive" value="1"/>
+     *
      * @throws InterruptedException
      */
     private static void test4() throws InterruptedException {

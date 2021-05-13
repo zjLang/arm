@@ -1,6 +1,6 @@
 package com.arm.concurrent;
 
-import com.arm.ArmUtil;
+import com.arm.util.ArmUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**

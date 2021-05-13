@@ -47,15 +47,15 @@
                   value="jdbc:mysql://localhost:3306/test?useOldAliasMetadataBehavior=true&amp;useSSL=false"/>
         <property name="username" value="root"/>
         <property name="password" value="123456"/>
-        <!--<property name="initialSize" value="2"/>
+        <property name="initialSize" value="2"/>
         <property name="minIdle" value="2"/>
-        <property name="maxIdle" value="10"/>-->
+        <property name="maxIdle" value="10"/>
         <property name="maxWait" value="1000"/>
 
         <!-- 测试事务连接占用不释放的方式 -->
-        <property name="initialSize" value="1"/>
+        <!--<property name="initialSize" value="1"/>
         <property name="minIdle" value="1"/>
-        <property name="maxActive" value="1"/>
+        <property name="maxActive" value="1"/>-->
     </bean>
 
     <bean name="transactionManager"

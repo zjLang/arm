@@ -1,4 +1,4 @@
-package com.arm;
+package com.arm.util;
 
 import java.util.Random;
 

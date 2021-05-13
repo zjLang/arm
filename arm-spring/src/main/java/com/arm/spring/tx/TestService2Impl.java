@@ -21,14 +21,12 @@ public class TestService2Impl implements TestService2 {
 
 
     @Override
-    @Transactional(propagation = Propagation.NESTED)
     public void test2() {
         jdbcTemplate.update(slq, new Object[]{"lisi2", "2"});  // sql2
     }
 
 
     @Override
-    @Transactional(propagation = Propagation.NESTED)
     public void test3() {
         jdbcTemplate.update(slq, new Object[]{"lisi3", "3"});  // sql3
         int a = 1 / 0;

@@ -1,6 +1,6 @@
 package com.arm.concurrent.demo;
 
-import com.arm.ArmUtil;
+import com.arm.util.ArmUtil;
 
 /**
  * 银行转账系统
