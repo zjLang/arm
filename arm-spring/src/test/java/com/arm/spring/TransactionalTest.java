@@ -1,9 +1,7 @@
 package com.arm.spring;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.arm.spring.tx.TestService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -18,8 +16,8 @@ public class TransactionalTest {
     public static void main(String[] args) throws InterruptedException {
         //test1();
         test3();
-        DruidDataSource dataSource = (DruidDataSource) context.getBean("dataSource");
-        log.info(String.valueOf(dataSource.getActiveCount()));
+        /*DruidDataSource dataSource = (DruidDataSource) context.getBean("dataSource");
+        log.info(String.valueOf(dataSource.getActiveCount()));*/
         //test4();
     }
 

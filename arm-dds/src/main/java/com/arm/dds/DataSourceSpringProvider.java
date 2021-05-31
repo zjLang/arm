@@ -22,7 +22,7 @@ public class DataSourceSpringProvider implements ApplicationContextAware, Initia
 
     private static DataSourceProvider DataSourceProvider;
 
-    @Value("${dds.dataSourceType}")
+    @Value("${dds.dataSourceType:druid}")
     private DataSourceTypeEnum type;
 
     /**

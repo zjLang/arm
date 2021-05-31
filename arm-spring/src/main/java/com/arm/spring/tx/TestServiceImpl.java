@@ -31,17 +31,17 @@ public class TestServiceImpl implements TestService {
     private TestService2 testService2;
 
     @Override
-    @Transactional(propagation = Propagation.NOT_SUPPORTED
+    @Transactional(propagation = Propagation.REQUIRED
     )
     public void test1(Object[][] params) {
         jdbcTemplate.update(slq, params[0]);  // sql1
     }
 
-    @Transactional(propagation = Propagation.NESTED
+    @Transactional(propagation = Propagation.REQUIRED
     )
     public void test2(Object[] params) {
         jdbcTemplate.update(slq, params); // sql2
-        //int a = 1 / 0; // 子方法抛出异常。
+        int a = 1 / 0; // 子方法抛出异常。
     }
 
 
@@ -62,7 +62,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.NESTED)
     public void test5() {
         try{
             jdbcTemplate.update(slq, new Object[]{"lisi1", "1"});  // sql1

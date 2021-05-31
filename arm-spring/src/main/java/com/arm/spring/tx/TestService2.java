@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TestService2 {
 
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.NESTED)
     void test2();
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.NESTED)
     void test3();
 
 

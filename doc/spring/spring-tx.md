@@ -2,8 +2,8 @@
 ### Ⅰ：事务特性（ACID）
 + 1.Atomic(原子性)  原子性，数据操作的最小单元是事务，而不是sql语句
 + 2.Consistency(一致性) 事务完成前后，数据要保持逻辑的一致性
-+ 2.Isolation(一致性) 一个事务执行的过程中,不应该受到其他事务的干扰
-+ 2.Durability(持久性) 事务一旦结束,数据就持久到数据库
++ 3.Isolation(一致性) 一个事务执行的过程中,不应该受到其他事务的干扰
++ 4.Durability(持久性) 事务一旦结束,数据就持久到数据库
 
 ### Ⅱ：传播机制（Propagation）
   + required : 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。
@@ -18,13 +18,15 @@
 ### Ⅲ：spring-tx事务测试
 #### 场景1：方法外调用测试(cglib代理)
 ```
-    testService.test1( new Object[][]{{"lisi", 1}, {"lisi1", 2}} );
-    testService.test2( new Object[]{"lisi1", 2} );
-    
+    test(){
+        testService.test1( new Object[][]{{"lisi", 1}, {"lisi1", 2}} );
+        testService.test2( new Object[]{"lisi1", 2} );
+    }        
     @Transactional(propagation = Propagation.REQUIRED)
     public void test1(Object[][] params) {
         jdbcTemplate.update( slq, params[0] );  // sql1
     }
+    @Transactional(propagation = Propagation.REQUIRED)
     public void test2(Object[] params) {
         jdbcTemplate.update( slq, params ); // sql2
         int a = 1 / 0; // 子方法抛出异常。
