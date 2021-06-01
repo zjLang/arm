@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 @Slf4j
 public class SQLiteUtil {
+    public static final String SQLITE_PREFIX= "jdbc:sqlite:";
 
     /**
      * 根据url，返回一个JdbcTemplate
