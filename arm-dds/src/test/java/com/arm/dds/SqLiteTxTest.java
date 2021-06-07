@@ -14,10 +14,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 @Slf4j
 public class SqLiteTxTest {
+    public static final String path = "E:\\\\2.资料\\\\2.公司资料\\\\1.在建项目\\\\15.国资委数据上报\\\\test文件\\\\toFile\\\\115100007650616494_0037_1002_20210226154242\\\\115100007650616494_0037_1002_20210226154242.db";
     static ClassPathXmlApplicationContext context;
     static DbTemplateService dbService;
     static TransactionTestService transactionTestService;
-    public static final String path = "E:\\\\2.资料\\\\2.公司资料\\\\1.在建项目\\\\15.国资委数据上报\\\\test文件\\\\toFile\\\\115100007650616494_0037_1002_20210226154242\\\\115100007650616494_0037_1002_20210226154242.db";
 
     static {
         context = new ClassPathXmlApplicationContext("classpath:spring-bean.xml");
