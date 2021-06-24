@@ -19,6 +19,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <!--<scope>compile</scope>-->
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -26,6 +27,22 @@
             <version>4.13</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.8.2</version>
+        </dependency>
     </dependencies>
 
+
+
+    <!--<build>
+        <plugins>
+            <plugin>
+                <groupId>com.arm</groupId>
+                <artifactId>arm-extend-maven-plugin</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </plugin>
+        </plugins>
+    </build>-->
 </project>
