@@ -13,7 +13,10 @@
                 http://www.springframework.org/schema/context
               http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.arm.spring"></context:component-scan>
+    <context:component-scan base-package="com.arm.spring">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
     <aop:aspectj-autoproxy/>
 
 
@@ -22,23 +25,23 @@
     </bean>
 
     <!-- listener -->
-    <bean id="catListener" class="com.arm.spring.event.CatListener" scope="prototype"></bean>
-    <bean id="pigListener" class="com.arm.spring.event.PigListener"></bean>
-    <bean id="washCatListener" class="com.arm.spring.event.WashCatListener"></bean>
-    <bean id="masterPublisher" class="com.arm.spring.event.MasterPublisher"></bean>
+    <bean id="catListener" class="com.arm.spring.event.CatListener" scope="prototype"/>
+    <bean id="pigListener" class="com.arm.spring.event.PigListener"/>
+    <bean id="washCatListener" class="com.arm.spring.event.WashCatListener"/>
+    <bean id="masterPublisher" class="com.arm.spring.event.MasterPublisher"/>
 
 
     <!--aop -->
-    <bean id="boy" class="com.arm.spring.aop.Boy"></bean>
-    <bean id="girl" class="com.arm.spring.aop.Girl"></bean>
-    <bean id="buyAspectJ" class="com.arm.spring.aop.BuyAspectJ"></bean>
+    <bean id="boy" class="com.arm.spring.aop.Boy"/>
+    <bean id="girl" class="com.arm.spring.aop.Girl"/>
+    <bean id="buyAspectJ" class="com.arm.spring.aop.BuyAspectJ"/>
 
 
     <!--事务测试-->
 
     <!-- 配置jdbc -->
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource"></property>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
     <!-- 配置数据源 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
@@ -60,7 +63,7 @@
 
     <bean name="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"></property>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
