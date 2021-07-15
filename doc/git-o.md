@@ -9,3 +9,5 @@
 + 6.在git上面创建一个repositories。注意是repositories不是project。
 + 7.选择push项目到git，vcs -> push。注意这里使用git协议，别用http，可能遇到未知错误😂。
 ![avatar](img/git/git-3.png)
+  
++ 8.文件大
