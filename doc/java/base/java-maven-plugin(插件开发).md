@@ -2,7 +2,7 @@
 
 + 1.使用idea作为开发工具
 + 2.创建module
-  ![创建模块第一步](../img/maven/maven-1.png)
+  ![创建模块第一步](../../img/maven/maven-1.png)
 + 3.创建module时文件命令规则为 xx-maven-plugin。官方命名规则（maven-xx-plugin）,不要使用的官方的命令规则。
 + 4.生成好的项目默认引用了（maven-plugin-api），但是实际开发远远不够。所以要根据实际要开发的功能导入对应的maven包。 pom文件的 `<packaging>maven-plugin</packaging>`
   为这个，注意一下
@@ -70,7 +70,7 @@ private String dependencies;
 ### Ⅲ：启动
 
 + 1.如何debug:首先clean install你的插件，然后在你引用插件的项目中右键选择debug就可以了。
-  ![debug](../img/maven/maven-2.png)
+  ![debug](../../img/maven/maven-2.png)
 + 2.如何再项目中一起调试官方插件和你的插件
 
 ```

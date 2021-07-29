@@ -40,20 +40,33 @@ public class SM2Utils {
 
                 Cipher cipher = new Cipher();
                 SM2 sm2 = SM2.Instance();
+
                 ECPoint userKey = sm2.ecc_curve.decodePoint( formatedPubKey );
+                // A1：用随机数发生器产生随机数k∈[1,n-1]
+                // A2：计算椭圆曲线点C1=[k]G=(x1,y1)，按本文本第1部分4.2.8和4.2.4给出的细节，将C1的数据类型转换为比特串；
+                // c1就是C1
                 ECPoint c1 = cipher.Init_enc( sm2, userKey );
+                //A3：计算椭圆曲线点S=[h]PB，若S是无穷远点，则报错并退出；
+                //A4：计算椭圆曲线点[k]PB=(x2,y2)，按本文本第1部分4.2.5和4.2.4给出的细节，将坐标x2、y2 的数据类型转换为比特串；
+                //A5：计算t=KDF(x2 ∥ y2, klen)，若t为全0比特串，则返回A1；
+                //A6：计算C2 = M ⊕ t；
+                // 重点好像好了校验步骤。source 就是C2
                 cipher.Encrypt( source );
+                //A7：计算C3 = Hash(x2 ∥ M ∥ y2)；
                 byte[] c3 = new byte[32];
                 cipher.Dofinal( c3 );
+                // A8：输出密文C = C1 ∥ C2 ∥ C3。 每个加解密源码包的这个步骤都不尽相同
+                // 1.比如有的调换了置放位置，C1||C3||C2,因为C1和C2的长度是固定的，可进行计算获取道值。
+                // 2。本列是使用了 DER/ASN1 进行了数据的对象序列化和凡序列化了。
                 DERInteger x = new DERInteger( c1.getX().toBigInteger() );
                 DERInteger y = new DERInteger( c1.getY().toBigInteger() );
                 DEROctetString derDig = new DEROctetString( c3 );
                 DEROctetString derEnc = new DEROctetString( source );
                 ASN1EncodableVector v = new ASN1EncodableVector();
-                v.add( x );
-                v.add( y );
-                v.add( derDig );
-                v.add( derEnc );
+                v.add( x ); // c1.x
+                v.add( y ); // c1.y
+                v.add( derDig ); // c3
+                v.add( derEnc ); //c2
                 DERSequence seq = new DERSequence( v );
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 DEROutputStream dos = new DEROutputStream( bos );
@@ -212,8 +225,8 @@ public class SM2Utils {
                 try {
                     ASN1Sequence derObj = (ASN1Sequence) dis.readObject();
                     Enumeration<DERInteger> e = derObj.getObjects();
-                    BigInteger r = ((DERInteger) e.nextElement()).getValue();
-                    BigInteger s = ((DERInteger) e.nextElement()).getValue();
+                    BigInteger r = ( e.nextElement()).getValue();
+                    BigInteger s = ( e.nextElement()).getValue();
                     sm2Result = new SM2Result();
                     sm2Result.r = r;
                     sm2Result.s = s;
@@ -243,7 +256,7 @@ public class SM2Utils {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main1(String[] args) throws Exception {
         Sm2KeyPair sm2 = generateKeyPair();
         String pubKey = ByteUtil.getHexString( sm2.getPubKey() );
         String priKey = ByteUtil.getHexString( sm2.getPriKey() );
@@ -277,15 +290,15 @@ public class SM2Utils {
         return new Sm2KeyPair( priKey, pubKey );
     }
 
-    public static void main() {
+    public static void main(String[] args) {
         String plainText = "Hello SM !";
         byte[] sourceData = plainText.getBytes();
         String prik = "444E6EA3EE0C7E0AAA5EE5C6BBC7A2D8DE3FB3FA990AD470232D07FB445F92D7";
         byte[] c = sign( ByteUtil.hexToByte( prik ), sourceData );
         System.out.println( "sign: " + ByteUtil.getHexString( c ) );
         String pubk = "2E9173C4DB1DB0B22980DD3235ABF99B787DE8E5C6D08BDBA4503D61EE2B32F0F7083CC46D92DAE72FD0223305D0B44A95D438142C45382B23B2A58122E1F3DF";
-        boolean vs = verifySign( ByteUtil.hexToByte( pubk ), sourceData, c );
-        System.out.println( "验签结果: " + vs );
+        //boolean vs = verifySign( ByteUtil.hexToByte( pubk ), sourceData, c );
+        //System.out.println( "验签结果: " + vs );
         System.out.println( "加密: " );
         byte[] cipherText = encrypt( ByteUtil.hexToByte( pubk ), sourceData );
         System.out.println( ByteUtil.getHexString( cipherText ) );

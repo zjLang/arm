@@ -33,7 +33,7 @@
     }    
 ```
 结果说明
-![avatar](../img/tx/tx-1.png)
+![avatar](../../img/tx/tx-1.png)
 + 1.这种情况相当于两个方法分别执行，互不相干。相当于两条平行线，永不相交。
 + 2.这种情况和我们的Controller调用多个service是一个意思，就是test1和test2开启的事务是两个事务，两者方法的执行互不影响。
 + 3.MANDATORY全红的意义是：在事务开始时，没找到当前事务，事务管理器直接抛出异常，方法结束，所以两个方法根本还没来的急执行。
@@ -55,7 +55,7 @@
         }
    ```
 结果说明
-![avatar](../img/tx/tx-2.png)
+![avatar](../../img/tx/tx-2.png)
 + 1.这种情况相当于两个方法在同一个盒子里，一荣俱荣，一损俱损。相当于一条线，没有其他路可走。
 + 2.这种情况和我们的service里面调用方法是一样的，其实从结果图中我们可以得出结论：test1和test2的两个sql其实等价于test1中直接执行两个sql 。
 ```
@@ -88,7 +88,7 @@ testService.test5( new Object[][]{{"lisi", 1}, {"lisi1", 2}} );
     }
 ```
 结果说明
-![avatar](../img/tx/tx-3.png)
+![avatar](../../img/tx/tx-3.png)
 + 1.这种情况情况比较多，需要具体问题具体分析。
 
 #### 场景4***:语义重现
@@ -165,6 +165,7 @@ try{dubboService.do();}catch(Throwable e){...}  // 远程dubbo调用报错，包
 >导致其实我们在调用dubboService.do()的时候，其实是将这个添加到已有的事务里面了，dubboService.do()报错直接照成dubboService.do()事务被标记
 >为回滚。所以我们的外部tryCatch直接没用。
 
+- [事物执行结果分析报告](/doc/data/spring-tx分析文件.xlsx)
 
 #### 思考
 + 1.为什么场景1中的service执行互不影响？
@@ -195,7 +196,7 @@ try{dubboService.do();}catch(Throwable e){...}  // 远程dubbo调用报错，包
     比如(required,required,requires_new),当事务3抛出异常后，事务2在和事务1同一个事务中执行时，事务1捕获到异常，所以事务1，2都会回滚。
 + 5.如果外部存在事务，外部事务无法影响内部事务  
     比如(required,requires_new,requires_new),当事务1抛出异常后，事务2，3在新创建的独立事务下执行，无法捕获到事务1的异常，所以2，3不会回滚；
-+ 6.特别的嵌套事务，当有嵌套事务时，其和他有关联的事务都会被该事务影响（基于savePoint）[savepoint](#savepoint)。
++ 6.特别的嵌套事务，当有嵌套事务时，其和他有关联的事务都会被该事务影响（基于savePoint）[savepoint]。
     当事务异常被捕获后，将基于保存点回滚事务（参考场景4-2）  
     比如(required,NESTED,NESTED),当事务3抛出异常后，事务1，2都被嵌套，3着事务都会被回滚。
     比如(required,requires_new,NESTED),当事务3抛出异常后，事务1，3被回滚，2正常提交。
@@ -236,7 +237,7 @@ try{dubboService.do();}catch(Throwable e){...}  // 远程dubbo调用报错，包
 
 #### Ⅲ.事务执行流程
 + 1.TransactionInterceptor首先我们看一下这个类的继承结构;其MethodInterceptor.invoke()方法就是执行入口。
-![avatar](../img/tx/tx-4.png)
+![avatar](../../img/tx/tx-4.png)
 + 2.TransactionInterceptor.invokeWithinTransaction().
     + 1.获取TransactionAttributeSource
     + 2.tas.getTransactionAttribute(method, targetClass) 获取该方法时事务配置
@@ -251,14 +252,14 @@ try{dubboService.do();}catch(Throwable e){...}  // 远程dubbo调用报错，包
     + 7.cleanupTransactionInfo(txInfo); 清理事务执行信息。
     + 8.commitTransactionAfterReturning(txInfo); 正常执行就提交事务。
 + 3.事务传播逻辑流程图(createTransactionIfNecessary)
-![avatar](../img/tx/tx-5.png)      
+![avatar](../../img/tx/tx-5.png)      
 
 #### Ⅳ.PlatformTransactionManager
 + 1.事务管理器做三件事情：getTransaction commit  rollback 。 一般的默认实现是：DataSourceTransactionManager
 + 2.TransactionStatus getTransaction(TransactionDefinition) 根据当前事务的事务定义获取当前事务的状态.
 + 3.void commit(TransactionStatus status) 提交事务，中间进行了判断，如果不满足提交的条件将会回滚事务。
 + 4.void rollback(TransactionStatus status) 回滚事务。
-![avatar](../img/tx/tx-6.png)     
+![avatar](../../img/tx/tx-6.png)     
 
 
 ## 事务优化   

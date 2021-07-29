@@ -14,7 +14,7 @@ web:
     9.spring-web  Spring框架时所需的核心类，包括自动载入Web Application Context 特性的类、Struts 与JSF 集成类、文件上传的支持类、Filter 类和大量工具辅助类
     10.spring-webmvc 框架的Servlets，Web MVC框架，控制器和视图支持
 ```
-参考：![包结构图](../img/spring-all/包结构图.png)
+参考：![包结构图](../../img/spring-all/包结构图.png)
 
 #### 基本概念
 + 1.面试切面的编程，旨在减少重复的代码

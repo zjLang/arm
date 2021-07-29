@@ -54,6 +54,22 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.3.11.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.arm</groupId>
+            <artifactId>arm-encry</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.xjfme</groupId>
+            <artifactId>SM2_SM3_SM4Encrypt</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pzone.crypto</groupId>
+            <artifactId>SM2Java</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
