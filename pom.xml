@@ -41,6 +41,8 @@
         <module>arm-extend-maven-plugin</module>
         <module>arm-war</module>
         <module>arm-encry2</module>
+        <module>arm-idea-plugin</module>
+        <module>arm-time-task</module>
 
 
     </modules>

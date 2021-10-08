@@ -1,12 +1,16 @@
 package com.arm.scene;
 
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.arm.dds.core.DynamicDataSourceException;
 import com.arm.sqlite.DbManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class TransactionTestServiceImpl implements TransactionTestService {
 
    /* @Autowired
@@ -18,8 +22,14 @@ public class TransactionTestServiceImpl implements TransactionTestService {
     @Autowired
     private JdbcTemplate jdbcTemplate;*/
 
+    //@Autowired
+   // private DbManager dbManager;
+
     @Autowired
-    private DbManager dbManager;
+    JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    DruidDataSource dataSource;
 
    /* @Autowired
     private TransactionTemplate transactionTemplate;*/
@@ -51,7 +61,8 @@ public class TransactionTestServiceImpl implements TransactionTestService {
 
     @Override
     public void insertSqLite() throws DynamicDataSourceException {
-        dbManager.getDbService().update(path, sqLite_sql);
-        throw new NullPointerException("test");
+        log.info("3." + dataSource.getActiveCount());
+        jdbcTemplate.update(sqLite_sql);
+        log.info("4." + dataSource.getActiveCount());
     }
 }

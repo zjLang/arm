@@ -7,8 +7,12 @@ package com.arm.concurrent.start;
  * @since 2021-3-8 14:59
  */
 public class JavaThread extends Thread {
-
+    @Override
     public void run() {
-        System.out.println( "JavaThread extends thread" );
+        System.out.println("JavaThread extends thread");
+    }
+
+    public static void main(String[] args) {
+        new JavaThread().start();
     }
 }

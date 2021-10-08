@@ -19,15 +19,17 @@
 - [spring-aop](./java/spring/spring-aop.md)
 - [spring事物](./java/spring/spring-tx.md)
 
+### 多线程
 
 
 ## 其他
 
-- [加解密算法](./other/加密算法.md)
+- [加解密算法](other/密码学/密码学.md)
 
 ## 工具[tool]
 
 - [linux项目部署](./tool/linux-deploy.md)
+- [mac设置](./tool/my_mac.md)
 
 [![stars](https://img.shields.io/github/stars/doocs/advanced-java?color=42b883&logo=github&style=flat-square)](https://github.com/doocs/advanced-java/stargazers)
 [![forks](https://img.shields.io/github/forks/doocs/advanced-java?color=42b883&logo=github&style=flat-square)](https://github.com/doocs/advanced-java/network/members)

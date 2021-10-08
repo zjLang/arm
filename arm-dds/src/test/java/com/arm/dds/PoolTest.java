@@ -14,9 +14,10 @@ import javax.sql.DataSource;
 @Slf4j
 public class PoolTest {
 
-    public static String basePath = "C:\\Users\\zhaolangjing\\Desktop\\testDb";
+    //public static String basePath = "C:\\Users\\zhaolangjing\\Desktop\\testDb";
+    public static String basePath = "/Users/zhaolangjing/资料/工作记录/国资委采集交换/115100007650616494_0031_1003_20210609095420_7fe7122a00924e8086a4486a192a2f1e";
     public static int maxDb = 8;
-    public static int maxNum = 10000;
+    public static int maxNum = 100;
     public static String INSERT_SQL = "insert into hadwn_rest_gathr_tab_001 ('CORP_NM') VALUES ('张三')  ";
 
     static ClassPathXmlApplicationContext context;
@@ -25,6 +26,18 @@ public class PoolTest {
 
     static {
         context = new ClassPathXmlApplicationContext("classpath:spring-bean.xml");
+    }
+
+
+    @Test
+    public void TestSingle() throws DynamicDataSourceException {
+        // 数据处理 ， 删除db数据
+        long l = System.currentTimeMillis();
+        for (int i = 0; i < maxNum; i++) {
+           // int random = ArmUtil.random(1, maxDb);
+            insert(basePath + ".db");
+        }
+        log.info("执行时间：" + (System.currentTimeMillis() - l) + "ms");
     }
 
     @Test
@@ -65,7 +78,7 @@ public class PoolTest {
         for (int i = 0; i < maxDb; i++) {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName("org.sqlite.JDBC");
-            dataSource.setUrl("jdbc:sqlite:" + basePath + "\\" + (i + 1) + ".db");
+            //dataSource.setUrl("jdbc:sqlite:" + basePath + "\\" + (i + 1) + ".db");
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
             jdbcTemplate.update("delete from hadwn_rest_gathr_tab_001 ");
         }

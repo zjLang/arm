@@ -9,4 +9,8 @@ public class JavaThread2 implements Runnable {
     public void run() {
         System.out.println("JavaThread2 implement runnable ");
     }
+
+    public static void main(String[] args) {
+        new Thread(new JavaThread()).start();
+    }
 }

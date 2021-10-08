@@ -77,7 +77,7 @@ public abstract class AbstractDynamicDataSource implements DynamicDataSource {
             }
             lock.lock();
             if (log.isDebugEnabled()) {
-                log.debug("Start creating the data source :{}", properties);
+                log.debug("{} Start creating the data source :{}", this, properties);
             }
             // 触发回收资源
             if (dataSourceMap.size() == maxActive) {

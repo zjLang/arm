@@ -15,7 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-@Component
+//@Component
 public class DataSourceSpringProvider implements ApplicationContextAware, InitializingBean {
 
     private static ApplicationContext applicationContext;
