@@ -1,4 +1,4 @@
-# 创建线程
+# 一.创建线程
 
 ## 基本创建
 
@@ -48,13 +48,13 @@ public class JavaThread3 implements Callable<Integer> {
 }
 ```
 
-## 线程池创建（Executor Executors ExecutorService ,ThreadPoolExecutor）
+## 线程池创建（Executor Executors ExecutorService ThreadPoolExecutor）
 
 > Executor是线程池(ExecutorService)的顶级接口，但是Executor严格来说并无线程池功能，其提供的方法execute()只是一个线程执行的工具。真正的线程池接口是ExecutorService
 > Executors是java提供的默认线程池实现类，其提供了4重方法
 > 使用ThreadPoolExecutor自定义线程池
 
-### Executors4种方式
+### Executors 4种方式
 
 + 第一种：固定线程池 ExecutorService(ThreadPoolExecutor) newFixedThreadPool(int nThreads)
 
@@ -105,7 +105,7 @@ public void threadPoolExecutorTest2() {
 }
 ```
 
-### 自定义线程池 （ThreadPoolExecutor）
+### 自定义线程池（ThreadPoolExecutor）
 
 ![四个构造函数](../../img/thread/t2.png)
 
@@ -190,9 +190,7 @@ public class CustomThreadPoll {
 }
 ```
 
-
-
-# 队列和决绝策略
+# 二.队列和决绝策略
 
 ## BlockingQueue（阻塞队列）介绍
 
@@ -201,11 +199,11 @@ public class CustomThreadPoll {
 
 + 方法介绍
 
-  | #   | 抛出异常      | 返回特殊值（null或false）| 无限期阻塞，知道操作成功 | 阻塞给定时间，然后放弃 |
-      | --- | ------------ | ------ | -----------|  -----------|
+  | #   | 抛出异常      | 返回特殊值（null或false）| 无限期阻塞，直到操作成功 | 阻塞给定时间，然后放弃 |
+          | --- | ------------ | ------ | -----------|  -----------|
   | 添加   | add(e) | offer(e)   |put(e)|offer(e, time, unit)|
   | 移除  | remove() | poll()  |take()|poll(time, unit)|
-  | 检查  | add(e) | offer(e)    |无|无|
+  | 检查  | element() | peek()    |无|无|
 
 1.放入数据
 
@@ -238,6 +236,7 @@ public class CustomThreadPoll {
 |    | SynchronousQueue| 无缓冲队列，同步队列，内部容量为0，每个put操作必须等待一个take操作，反之亦然。类似余生产者与消费者直接交易 |
 
 ## RejectedExecutionHandler(拒接策略)介绍
+
 > 当没有更多线程或队列插槽可用时,ThreadPoolExecutor将执行拒接策略。
 
 + 默认策略
@@ -248,3 +247,34 @@ public class CustomThreadPoll {
 | 2   | CallerRunsPolicy | 由调度线程从新执行该任务   |
 | 3   | DiscardPolicy | 丢弃任务（不执行任何操作），但是不抛出异常    |
 | 4   | DiscardOldestPolicy | 丢弃队列最前面的任务，然后重新尝试执行任务（重复此过程）    |
+
+# 三.executor簇介绍
+## 结构
+```
+Executor
+  ｜-- ExecutorService
+     ｜-- AbstractExecutorService
+        ｜-- ThreadPoolExecutor    
+          ｜-- ScheduledThreadPoolExecutor 
+     ｜-- ScheduledExecutorService
+       ｜-- ScheduledThreadPoolExecutor            
+```
+
+
+## Executor接口
+> Executor 提供了方法：void execute(Runnable command);  根据Executor实现的判断，该命令可以在新线程、池线程或调用线程中执行
+
+## AbstractExecutorService抽象类
+> 其提供了几类方法，下面一一说明：
+> 1. protected newTaskFor 创建一个可用的RunnableFuture任务，以供线程调度执行。  
+> 2. submit 提交任务并返回结果  
+> 3. List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) 批量执行任务并返回结果集。  
+> 4. invokeAny 执行并返回成功的值，任一任务完成任务执行立即返回结果。  
+> 5. execute 执行任务无返回结果  
+> 6. shutdown 安全关闭，已有任务正常执行，但不会接收新任务。  
+> 7. shutdownNow 不安全关闭，尝试停止所有正在执行的任务，停止等待任务的处理，并返回等待执行的任务列表。  
+> 8. isShutdown 不安全关闭，尝试停止所有正在执行的任务，停止等待任务的处理，并返回等待执行的任务列表。  
+> 9. isTerminated 如果关闭后所有任务都已完成，则返回true 。 请注意，除非先调用shutdown或shutdownNow ，否则isTerminated永远不会为true 。 
+> 10. awaitTermination 
+
+
