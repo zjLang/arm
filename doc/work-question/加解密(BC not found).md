@@ -54,3 +54,8 @@
 > 1.nested exception is java.lang.NoClassDefFoundError: javax/xml/bind/ValidationException
 > 处理办法：启动后发现本地jdk被升级到jdk16，使用：/usr/libexec/java_home -V 查看本地安装所有安装版本和默认使用版本。
 > 切换到jkd8：参考：mac_cmd.md/配置jdk切换
+> 由于本地无法重现（具体原因不知），后台在正式环境 测试通过了。
+
+```
+    结论：该方法被证实是可以. 
+```
