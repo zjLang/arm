@@ -11,3 +11,10 @@
 ![avatar](img/git/git-3.png)
   
 + 8.文件大
+
+### 错误1： Failed to connect to github.com port 443: Operation timed out
+> 描述：idea clone,pull代码一直报错,没发成功，报上述错误 。 
+> 处理办法：首先的访问github需要梯子，在梯子的情况下还出现上诉错误。找到socket代码端口，命令行输入如下两行代码：
+> git config --global http.proxy http://127.0.0.1:7890
+> git config --global https.proxy https://127.0.0.1:7890
+> 使用命令：cat ~/.gitconfig   查看。

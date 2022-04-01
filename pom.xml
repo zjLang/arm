@@ -7,6 +7,11 @@
     <url>todo</url>
     <description>a learn project</description>
 
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>2.0.3.RELEASE</version>
+    </parent>
 
     <groupId>com.arm</groupId>
     <artifactId>arm</artifactId>
@@ -43,6 +48,10 @@
         <module>arm-encry2</module>
         <module>arm-idea-plugin</module>
         <module>arm-time-task</module>
+        <module>arm-time-task</module>
+        <module>spring-boot-configuration</module>
+        <module>spring-boot-demo</module>
+
 
 
     </modules>

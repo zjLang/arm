@@ -1,0 +1,14 @@
+management:
+  endpoint:
+    health:
+      enabled: true  # 开启健康管理
+      show-details: always # 总是显示详细信息
+  endpoints:
+    web:
+      exposure:
+        include: "*" # 开启所有web访问   exclude 是排除，注意下别写反了
+debug: true
+spring:
+  devtools:
+    restart:
+      enabled: true #设置开启热部署
