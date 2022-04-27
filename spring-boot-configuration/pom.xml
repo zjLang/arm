@@ -35,10 +35,11 @@
             <optional>true</optional><!-- optional=true,依赖不会传递，该项目依赖devtools；之后依赖myboot项目的项目如果想要使用devtools，需要重新引入 -->
         </dependency>
 
+        <!--配置扫描静态化，加快启动速度-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-indexer</artifactId>
-            <optional>true</optional>
+            <!--<optional>true</optional>--> <!--千万别家这个，加了会造成依赖无法传递，引用包的bean无法被spring 加载   -->
         </dependency>
     </dependencies>
 </project>
