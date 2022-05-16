@@ -53,7 +53,6 @@
         <module>spring-boot-demo</module>
 
 
-
     </modules>
 
     <!-- 依赖管理 -->
