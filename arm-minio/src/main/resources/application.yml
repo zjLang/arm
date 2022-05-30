@@ -1,0 +1,4 @@
+minio:
+  endpoint: http://127.0.0.1:9000
+  accesskey: SUCWGJ8W4H36HC7KR6XO
+  secretkwy: d9OkZ14ab04zwCd/+6iEXbPqeVapDOaDvhYcw88r

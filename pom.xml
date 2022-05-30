@@ -51,6 +51,7 @@
         <module>arm-time-task</module>
         <module>spring-boot-configuration</module>
         <module>spring-boot-demo</module>
+        <module>arm-minio</module>
 
 
     </modules>
