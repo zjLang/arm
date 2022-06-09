@@ -1,3 +1,5 @@
+@[TOC](目录)
+
 # 配置
 
 ## 电源配置（pmset -g custom）
@@ -88,7 +90,7 @@ Currently in use:
  https://www.cakebrew.com/
 ```
 
-+ [安装运行结果](/doc/img/brew-install.md)
++ [安装运行结果](/doc/data/img/brew-install.md)
 
 + 参考地址
 

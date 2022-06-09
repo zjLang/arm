@@ -107,7 +107,7 @@ public void threadPoolExecutorTest2() {
 
 ### 自定义线程池（ThreadPoolExecutor）
 
-![四个构造函数](../../img/thread/t2.png)
+![四个构造函数](../../data/img/thread/t2.png)
 
 + 参数说明
 

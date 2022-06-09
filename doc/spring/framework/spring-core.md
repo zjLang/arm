@@ -1,4 +1,6 @@
-# 一.core的包结构
+# 一.包结构
+
+# 1 bean
 
 ```
 ├── springframework   父pacakage

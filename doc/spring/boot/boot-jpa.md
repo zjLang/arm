@@ -1,4 +1,4 @@
-# [使用手册](../../xmind/springJPA.xmind)
+# [使用手册](../framework/springJPA.xmind)
 
 **参考项目 arm-boot-demo**
 

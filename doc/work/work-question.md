@@ -1,10 +1,10 @@
-# 该错误记录一次线上SM4加解密错误
+# SM4加解密错误
 
 ## 1.问题描述
 
 > 具体描述：java.security.NoSuchProviderException: Provider 'BC' not found 。如下图：
 
-![错误截图](../img/wq/wq-1.jpg)
+![错误截图](../data/img/wq/wq-1.jpg)
 
 实现代码
 

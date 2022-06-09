@@ -54,13 +54,13 @@ management:
 + 列子：
 
 durid数据库连接池,durid也专门提供了自动配置支持
-![img.png](../img/bs-1.png)
+![img.png](../../data/img/spring-all/bs-1.png)
 **spring.factories**中的内容是这样的:
 > org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
 
 **DruidDataSourceAutoConfigure.java** 中的内容：
-![img.png](../img/bs-2.png)
+![img.png](../../data/img/spring-all/bs-2.png)
 
 ## 5.spring-cli
 

@@ -39,7 +39,7 @@ web:
     10.spring-webmvc 框架的Servlets，Web MVC框架，控制器和视图支持
 ```
 
-参考：![包结构图](../../img/spring-all/包结构图.png)
+参考：![包结构图](../../data/img/spring-all/包结构图.png)
 
 # 2.基本概念
 
@@ -51,6 +51,6 @@ web:
 
 ## [3.1 spring-core](./spring-core.md)
 
-## [3.2 spring-bean/context](./spring-bean_context.md)
+## [3.2 spring-bean/context](spring-core.md)
 
-## [3.spring-aop](./spring-aop.md)
+## [3.spring-aop](spring-aop.md)
