@@ -1,0 +1,10 @@
+debug: true
+spring:
+  devtools:
+    restart:
+      enabled: true #设置开启热部署
+server:
+  servlet:
+    context-path: /sqlite
+  port: 8998
+

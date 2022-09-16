@@ -104,3 +104,32 @@ Currently in use:
 
 + win10安装无法联网：sudo -b /Applications/Parallels\ Desktop.app/Contents/MacOS/prl_client_app
 + https://qiujunya.com/article/2020/9/9/103.html
+
+## mongodb安装
+```
+1.安装
+> cd /usr/local 
+> sudo curl -O https://fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-4.0.9.tgz
+> sudo tar -zxvf mongodb-osx-ssl-x86_64-4.0.9.tgz
+> sudo mv mongodb-osx-x86_64-4.0.9/ mongodb
+
+2.设置环境变量
+> export PATH=/usr/local/mongodb/bin:$PATH
+
+3.设置db数据和日志保存路径，并给用户权限
+> sudo mkdir -p /usr/local/var/mongodb
+> sudo mkdir -p /usr/local/var/log/mongodb
+> sudo chown zhaolangjing /usr/local/var/mongodb
+> sudo chown zhaolangjing /usr/local/var/log/mongodb
+
+4.启动 
+> mongod --dbpath /usr/local/var/mongodb --logpath /usr/local/var/log/mongodb/mongo.log --fork
+--dbpath 设置数据存放目录
+--logpath 设置日志存放目录
+--fork 在后台运行
+> ps aux | grep -v grep | grep mongod
+
+> 5.打开操作终端
+$ cd /usr/local/mongodb/bin 
+$ ./mongo
+```

@@ -52,6 +52,8 @@
         <module>spring-boot-configuration</module>
         <module>spring-boot-demo</module>
         <module>arm-minio</module>
+        <module>arm-sqlite</module>
+        <module>arm-mongo</module>
 
 
     </modules>

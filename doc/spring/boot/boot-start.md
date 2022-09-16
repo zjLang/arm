@@ -40,7 +40,8 @@ management:
 
 ## 4.spring-boot-autoconfigure 自动装配
 
-### 原理 
+### 原理
+
 > 使用 SpringBootApplication 注解标记一个应用，**EnableAutoConfiguration** 注解就是主要用于导入加载组件用的。  
 > EnableAutoConfiguration中的@Import({AutoConfigurationImportSelector.class})这个是重点 。  
 > AutoConfigurationImportSelector 组件用于匹配筛选需要加载的组件。spring.factories 被加载过程：  
@@ -87,7 +88,7 @@ com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
 >
 > 2.**RestartApplicationListener**监听**ApplicationEvent**事件，当监听到重启事件（**ApplicationStartingEvent**）时，
 > 将调用Restarter.initialize()方法重启应用。
-> 
+>
 > 3.继续调用start()方法，doStart()装载需要热部署的类和类加载器；relaunch(ClassLoader classLoader)方法执行重启应用方法。
 >
 > **过程分析:**  
@@ -95,5 +96,11 @@ com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
 > 技巧2：通过 RestartLauncher.run() Method mainMethod = mainClass.getDeclaredMethod("main", String[].class); mainMethod.invoke(null, new Object[] { this.args }); 重启应用。  
 > 技巧3：通过 Restarter.immediateRestart() SilentExitExceptionHandler.exitCurrentThread(); main主线程抛出该异常，结束main线程。
 
-
 ## 7.spring-boot-starters
+
+## spring默认配置类加载
+
+```
+    spring 默认加载组建方式：写一个 XXXConfiguration类，在类上加上注解：@Configuration ，
+    然后在spring-boot-autoconfigurejar中的spring.factories中注册。
+```

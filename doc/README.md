@@ -85,3 +85,7 @@
 - [工作记录](work/work-wisesoft.md)
     - nohup jar
     - tomcat配置index地址
+
+## 科学上网
+
+- [科学上网方法一](https://github.com/waylau/books-collection)
