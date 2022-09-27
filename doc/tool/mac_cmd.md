@@ -15,6 +15,8 @@
 > 列出所有的java_home安装： /usr/libexec/java_home -V
 >
 > MAC下同时安装多个版本的JDK:配置 /etc/profile
+> 
+> 如果jdk切换（source ~/.bash_profile）失败执行命令：source /etc/profile ~/.bash_profile 进行切换
 
 > export JAVA_16_HOME=/Users/zhaolangjing/Library/Java/JavaVirtualMachines/openjdk-16.0.1/Contents/Home  
 > export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_201.jdk/Contents/Home  

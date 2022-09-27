@@ -48,12 +48,12 @@
         <module>arm-encry2</module>
         <module>arm-idea-plugin</module>
         <module>arm-time-task</module>
-        <module>arm-time-task</module>
         <module>spring-boot-configuration</module>
         <module>spring-boot-demo</module>
         <module>arm-minio</module>
         <module>arm-sqlite</module>
         <module>arm-mongo</module>
+        <module>arm-code-mix</module>
 
 
     </modules>

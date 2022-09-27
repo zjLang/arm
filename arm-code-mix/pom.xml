@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>arm</artifactId>
+        <groupId>com.arm</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>arm-code-mix</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.arm</groupId>
+            <artifactId>arm-dds</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--<plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.yworks</groupId>
+                        <artifactId>yguard</artifactId>
+                        <version>3.1.0</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <property refid="maven.compile.classpath" name="mvn.classpath"/>
+                                <echo message="Using Maven Classpath:  ${project.build.finalName}"/>
+                                <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask"/>
+                                <yguard>
+                                    &lt;!&ndash; Input file and output file is the same. &ndash;&gt;
+                                    <inoutpair
+                                            in="${project.build.directory}/${project.build.finalName}.${project.packaging}"
+                                            out="${project.build.directory}/${project.build.finalName}.${project.packaging}"/>
+
+                                    <attribute name="SourceFile, LineNumberTable, LocalVariableTable">
+                                        <patternset>
+                                            <include name="com.arm.code.**"/>
+                                        </patternset>
+                                    </attribute>
+
+                                    &lt;!&ndash;<shrink logfile="${project.build.directory}/yshrink.log.xml" createStubs="true">
+                                        <keep>
+                                            &lt;!&ndash;<class name="com.arm.code.mix.base.NameTest"/>&ndash;&gt;
+                                            <class>
+                                                <patternset>
+                                                    <include name="com.arm.code.mix.base.NameTest"/>
+                                                    <exclude name="com.arm.code.mix.**.*$$*"/>
+                                                </patternset>
+                                            </class>
+                                            &lt;!&ndash;<class classes="public" methods="public" fields="public"/>&ndash;&gt;
+                                            &lt;!&ndash;<class extends="com.arm.code.mix.base.BaseClass" methods="private" fields="private"/>&ndash;&gt;
+                                            &lt;!&ndash;<method name="void main(java.lang.String[])" class="com.ewa.pipe.dbtransfer.dpl.DplDbtransferApplication"/>&ndash;&gt;
+                                        </keep>
+                                    </shrink>&ndash;&gt;
+
+                                    &lt;!&ndash; Obfuscate classes plus string references. &ndash;&gt;
+                                    <rename
+                                            logfile="${project.build.directory}/yrename.log.xml"
+                                            replaceClassNameStrings="true"
+                                            annotationClass="com.ewa.pipe.dbtransfer.dpl.Test"
+                                    >
+                                        &lt;!&ndash; Keep the only class to be used for easy running and its public method main(). &ndash;&gt;
+                                        <keep>
+                                            &lt;!&ndash; main 类的修改方式 &ndash;&gt;
+                                            <class name="com.arm.code.mix.base.SpringBoot"/>
+                                            <method name="void main(java.lang.String[])" class="com.arm.code.mix.base.SpringBoot"/>
+
+                                            &lt;!&ndash;<package>
+                                                <patternset>
+                                                    <include name="com.arm.code.mix.base.*"/>
+                                                </patternset>
+                                            </package>&ndash;&gt;
+
+                                            &lt;!&ndash;suppress UnresolvedMavenProperty &ndash;&gt;
+                                            &lt;!&ndash;<class extends="com.arm.code.mix.base.BaseClass"/>&ndash;&gt;
+
+                                        </keep>
+                                        <property name="naming-scheme" value="small"/>
+                                    </rename>
+
+                                    &lt;!&ndash; There are some external libraries used - Maven knows details. &ndash;&gt;
+                                    <externalclasses>
+                                        <pathelement location="${project.basedir}/lib/gson.jar"/>
+                                    </externalclasses>
+
+                                </yguard>
+                            </tasks>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>-->
+
+
+
+
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <!-- 是否将生成的PG文件安装部署-->
+                    <attach>false</attach>
+                    <!-- 是否混淆 -->
+                    <obfuscate>true</obfuscate>
+                    <!-- 指定生成文件分类 -->
+                    <!--<attachArtifactClassifier>pg</attachArtifactClassifier>-->
+                    <!-- 加载文件的过滤器，就是你的工程目录了-->
+                    <inFilter>com/arm/code/**</inFilter>
+                    <!-- 对什么东西进行加载，这里仅有classes成功，毕竟你也不可能对配置文件及JSP混淆吧-->
+                    <injar>classes</injar>
+                    <!-- 输出目录-->
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <outjar>${project.build.finalName}.${project.packaging}</outjar>
+                    <options>
+                        <!-- JDK目标版本1.7-->
+                        <option>-target 1.8</option>
+                        <!-- 不做收缩（删除注释、未被引用代码）-->
+                        <option>-dontshrink</option>
+                        <!-- 不做优化（变更代码实现逻辑）-->
+                        <option>-dontoptimize</option>
+                        <!-- 不忽略非公用类文件及成员-->
+                        <option>-dontskipnonpubliclibraryclasses</option>
+                        <option>-dontskipnonpubliclibraryclassmembers</option>
+                        <!-- 优化时允许访问并修改有修饰符的类和类的成员 -->
+                        <option>-allowaccessmodification</option>
+                        <!-- 确定统一的混淆类的成员名称来增加混淆,防止冲突-->
+                        <option>-useuniqueclassmembernames</option>
+                        <!-- 不混淆所有包名，Spring配置中有大量固定写法的包名-->
+                        <option>-keeppackagenames</option>
+                        <!-- 不混淆所有特殊的类-->
+                        <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,LocalVariable*Table,*Annotation*,Synthetic,EnclosingMethod</option>
+                        <!-- 不混淆所有的set/get方法，毕竟项目中使用的部分第三方框架（例如Shiro）会用到大量的set/get映射-->
+                        <option>-keepclassmembers public class * {void set*(***);*** get*();}</option>
+                        <!-- 不混淆的SpringBoot类及其中的方法 -->
+                        <option>-keep class com.arm.code.mix.base.SpringBoot{ &lt;methods&gt;; }</option>
+                        <!-- 不混淆job包下的所有类名，且类中的方法也不混淆-->
+                        <!--<option>-keep class com.chinatelecom.gz.wy.zhukun.shiro_spring.job.** { &lt;methods&gt;; }</option> -->
+                        <!-- 不混淆filter包下的所有类名，这里主要是对Shiro的路踢人过滤器混淆，对类的属性和方法进行了混淆-->
+                        <!--<option>-keep class com.chinatelecom.gz.wy.zhukun.shiro_spring.filter.** </option> -->
+                        <!-- 不混淆model包中的所有类以及类的属性及方法，实体包，混淆了会导致ORM框架及前端无法识别-->
+                        <!--<option>-keep class com.chinatelecom.gz.wy.zhukun.shiro_spring.model.** {*;}</option>-->
+
+                        <!-- com.test.prog.util, util包不混淆的类的属性及方法，实体包  -->
+                        <!--<option>-keep class com.test.prog.util.finals.Const{ *; }</option>-->
+                        <!-- 不混淆凭证包下的所有类名，但对类中的属性、方法进行混淆，原因是Spring配置中用到了这个类名-->
+                        <!--<option>-keep class com.test.prog.util.SecCode</option>-->
+                        <!--<option>-keep class com.test.prog.util.exception.HihSoftHandlerException</option>-->
+                        <!-- 不混淆job包下的所有类名，且类中的方法也不混淆-->
+                        <!--<option>-keep class com.test.prog.controller.** { &lt;methods&gt;; }</option>-->
+                    </options>
+
+                    <!-- 添加依赖，这里你可以按你的需要修改，这里测试只需要一个JRE的Runtime包就行了 -->
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${java.home}/lib/jce.jar</lib>
+                        <!--<lib>${java.home}/lib/security/local_policy.jar</lib>-->
+                        <!--<lib>${java.home}/lib/security/US_export_policy.jar</lib>-->
+                        <lib>${java.home}/lib/ext/sunjce_provider.jar</lib>
+                    </libs>
+                </configuration>
+
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!--<executions>
+                    <execution>
+                        &lt;!&ndash; spingboot 打包需要repackage否则不是可执行jar &ndash;&gt;
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.arm.code.mix.base.SpringBoot</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>-->
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
