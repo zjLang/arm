@@ -10,9 +10,10 @@ public class Test {
 
     public static void main(String[] args) {
         try {
+            /*MinioClient minioClient = MinioClient.builder()
+                    .endpoint("http://172.16.9.126:9000").credentials("admin", "w1ses0ft").build();*/
             MinioClient minioClient = MinioClient.builder()
-                    //.endpoint("http://43.154.8.2:9000")
-                    .endpoint("http://172.16.9.126:9000").credentials("admin", "w1ses0ft").build();
+                    .endpoint("http://172.16.9.101:9000").credentials("wisesoft", "wisesoft").build();
             String bucketName = "minio.zlj";
             boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
             if (!found) {
@@ -34,7 +35,7 @@ public class Test {
             ());
             System.out.println(statObjectResponse);*/
 
-            ObjectWriteResponse objectWriteResponse1 = minioClient.copyObject(CopyObjectArgs.builder().bucket("minio.zlj")
+            /*ObjectWriteResponse objectWriteResponse1 = minioClient.copyObject(CopyObjectArgs.builder().bucket("minio.zlj")
                     .object("moto1.jpg").source(CopySource.builder().bucket(
                             "minio.zlj").object("moto.jpg").build()).build());
             System.out.println(objectWriteResponse1);
@@ -44,7 +45,7 @@ public class Test {
             System.out.println(objectStat);
 
             String objectUrl = minioClient.getObjectUrl("minio.zlj", "moto1.jpg");
-            System.out.println(objectUrl);
+            System.out.println(objectUrl);*/
         } catch (Exception e) {
             e.printStackTrace();
         }
