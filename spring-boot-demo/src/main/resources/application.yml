@@ -1,6 +1,6 @@
 spring:
   datasource: # 不配置使用默认的链接池：Hikari
-    url: jdbc:postgresql://172.16.9.88:5432/jc_product_report?useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=round&useSSL=false
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: postgresql
+    url: jdbc:mysql://172.16.9.19:3306/gs_report?useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=round&useSSL=false&useInformationSchema=true
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: wisesoft

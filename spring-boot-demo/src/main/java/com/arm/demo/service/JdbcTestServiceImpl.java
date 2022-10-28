@@ -12,6 +12,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author z-ewa
@@ -21,6 +22,15 @@ public class JdbcTestServiceImpl {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private Connection connection;
+    private DatabaseMetaData metaData;
+
+    public void init() throws SQLException {
+        if (connection == null) {
+            connection = this.jdbcTemplate.getDataSource().getConnection();
+            connection.getMetaData();
+        }
+    }
 
     public void query() {
         String sql = "select * from re_log  limit 1";
@@ -33,10 +43,33 @@ public class JdbcTestServiceImpl {
     }
 
 
-    public void query2() throws SQLException, JsonProcessingException {
-        Connection connection = this.jdbcTemplate.getDataSource().getConnection();
-        DatabaseMetaData metaData = connection.getMetaData();
-        String tableName = "re_log";
+    public List<Map<String, String>> getTable(String tableName) {
+        try {
+            init();
+            ResultSet rs = metaData.getTables(connection.getCatalog(), connection.getSchema(), tableName, null);
+            return template(rs, map -> {
+                try {
+                    map.put(rs.getString("TABLE_NAME"), rs.getString("REMARKS"));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                return map;
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public void getPk() throws SQLException {
+        init();
+        //metaData.getPrimaryKeys();
+    }
+
+    public void getCloumn(String tableName) throws SQLException, JsonProcessingException {
+        init();
         ResultSet resultSet = metaData.getColumns(null, connection.getSchema(), tableName, null);
         List<Map<String, String>> list = new ArrayList<>();
         while (resultSet.next()) {
@@ -65,5 +98,15 @@ public class JdbcTestServiceImpl {
         }
         String s = new ObjectMapper().writeValueAsString(list);
         System.out.println("query success:" + s);
+    }
+
+
+    private List<Map<String, String>> template(ResultSet rs, Function<Map<String, String>, Map<String, String>> function) throws SQLException, JsonProcessingException {
+        List<Map<String, String>> list = new ArrayList<>();
+        while (rs.next()) {
+            Map<String, String> map = function.apply(new HashMap<>(8));
+            list.add(map);
+        }
+        return list;
     }
 }
