@@ -28,7 +28,7 @@ public class JdbcTestServiceImpl {
     public void init() throws SQLException {
         if (connection == null) {
             connection = this.jdbcTemplate.getDataSource().getConnection();
-            connection.getMetaData();
+            metaData = connection.getMetaData();
         }
     }
 
@@ -63,12 +63,21 @@ public class JdbcTestServiceImpl {
         return null;
     }
 
-    public void getPk() throws SQLException {
+    public List<Map<String, String>> getPk(String tableName) throws SQLException, JsonProcessingException {
         init();
-        //metaData.getPrimaryKeys();
+        ResultSet rs = metaData.getPrimaryKeys(null, connection.getSchema(), tableName);
+        return template(rs, map -> {
+            try {
+                map.put("COLUMN_NAME", rs.getString("COLUMN_NAME"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return map;
+        });
+
     }
 
-    public void getCloumn(String tableName) throws SQLException, JsonProcessingException {
+    public List<Map<String, String>> getCloumn(String tableName) throws SQLException, JsonProcessingException {
         init();
         ResultSet resultSet = metaData.getColumns(null, connection.getSchema(), tableName, null);
         List<Map<String, String>> list = new ArrayList<>();
@@ -97,7 +106,7 @@ public class JdbcTestServiceImpl {
             list.add(map);
         }
         String s = new ObjectMapper().writeValueAsString(list);
-        System.out.println("query success:" + s);
+        return list;
     }
 
 
