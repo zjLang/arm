@@ -1,8 +1,8 @@
 @[TOC](目录)
 
-# 配置
+## 配置
 
-## 电源配置（pmset -g custom）
+### 电源配置（pmset -g custom）
 
 + 默认配置（https://zhuanlan.zhihu.com/p/159468988）
 
@@ -42,7 +42,7 @@ Currently in use:
     tcpkeepalive = 1 盒盖不断网
 ```
 
-## homebrew（telnet...）
+### homebrew（telnet...）
 
 > 作用：Homebrew是一款Mac OS平台下的软件包管理工具，拥有安装、卸载、更新、查看、搜索等很多实用的功能。简单的一条指令，就可以实现包管理，
 > 而不用你关心各种依赖和文件路径的情况，十分方便快捷。
